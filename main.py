@@ -57,28 +57,28 @@ class Player(pygame.sprite.Sprite):
             
         self.sprites = SpriteSheet("resources/player.png")
     
-        self.stillRight = self.sprites.image_at((0, 0, 30, 42), colorkey = (250, 255, 0))
-        self.stillLeft = self.sprites.image_at((0, 42, 30, 42), colorkey = (250, 255, 0))
+        self.stillRight = self.sprites.image_at((0, 0, 30, 42))
+        self.stillLeft = self.sprites.image_at((0, 42, 30, 42))
     
-        self.runningRight = (self.sprites.image_at((0, 84, 30, 42), colorkey = (250, 255, 0)),
-                    self.sprites.image_at((30, 84, 30, 42), colorkey = (250, 255, 0)),
-                    self.sprites.image_at((60, 84, 30, 42), colorkey = (250, 255, 0)),
-                    self.sprites.image_at((90, 84, 30, 42), colorkey = (250, 255, 0)),
-                    self.sprites.image_at((120, 84, 30, 42), colorkey = (250, 255, 0)))
+        self.runningRight = (self.sprites.image_at((0, 84, 30, 42)),
+                    self.sprites.image_at((30, 84, 30, 42)),
+                    self.sprites.image_at((60, 84, 30, 42)),
+                    self.sprites.image_at((90, 84, 30, 42)),
+                    self.sprites.image_at((120, 84, 30, 42)))
 
-        self.runningLeft = (self.sprites.image_at((0, 126, 30, 42), colorkey = (250, 255, 0)),
-                    self.sprites.image_at((30, 126, 30, 42), colorkey = (250, 255, 0)),
-                    self.sprites.image_at((60, 126, 30, 42), colorkey = (250, 255, 0)),
-                    self.sprites.image_at((90, 126, 30, 42), colorkey = (250, 255, 0)),
-                    self.sprites.image_at((120, 126, 30, 42), colorkey = (250, 255, 0)))
+        self.runningLeft = (self.sprites.image_at((0, 126, 30, 42)),
+                    self.sprites.image_at((30, 126, 30, 42)),
+                    self.sprites.image_at((60, 126, 30, 42)),
+                    self.sprites.image_at((90, 126, 30, 42)),
+                    self.sprites.image_at((120, 126, 30, 42)))
                     
-        self.jumpingRight = (self.sprites.image_at((30, 0, 30, 42), colorkey = (250, 255, 0)),
-                    self.sprites.image_at((60, 0, 30, 42), colorkey = (250, 255, 0)),
-                    self.sprites.image_at((90, 0, 30, 42), colorkey = (250, 255, 0)))
+        self.jumpingRight = (self.sprites.image_at((30, 0, 30, 42)),
+                    self.sprites.image_at((60, 0, 30, 42)),
+                    self.sprites.image_at((90, 0, 30, 42)))
 
-        self.jumpingLeft = (self.sprites.image_at((30, 42, 30, 42), colorkey = (250, 255, 0)),
-                    self.sprites.image_at((60, 42, 30, 42), colorkey = (250, 255, 0)),
-                    self.sprites.image_at((90, 42, 30, 42), colorkey = (250, 255, 0)))
+        self.jumpingLeft = (self.sprites.image_at((30, 42, 30, 42)),
+                    self.sprites.image_at((60, 42, 30, 42)),
+                    self.sprites.image_at((90, 42, 30, 42)))
         
         self.image = self.stillRight
         
@@ -227,25 +227,13 @@ class Tile(pygame.sprite.Sprite):
 
 class SpriteSheet(object):
     def __init__(self, fileName):
-        self.sheet = pygame.image.load(fileName).convert()
+        self.sheet = pygame.image.load(fileName)
 
-    def image_at(self, rectangle, colorkey = None):
+    def image_at(self, rectangle):
         rect = pygame.Rect(rectangle)
-        image = pygame.Surface(rect.size).convert()
+        image = pygame.Surface(rect.size, pygame.SRCALPHA, 32).convert_alpha()
         image.blit(self.sheet, (0, 0), rect)
-        if colorkey is not None:
-            if colorkey is -1:
-                colorkey = image.get_at((0,0))
-            image.set_colorkey(colorkey, pygame.RLEACCEL)
         return image
-
-    def images_at(self, rects, colorkey = None):
-        return [self.image_at(rect, colorkey) for rect in rects]
-
-    def load_strip(self, rect, image_count, colorkey = None):
-        tups = [(rect[0]+rect[2]*x, rect[1], rect[2], rect[3])
-                for x in range(image_count)]
-        return self.images_at(tups, colorkey)
         
 def main():
     pygame.init()
